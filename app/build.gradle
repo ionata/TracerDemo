@@ -1,0 +1,67 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+ext {
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+    TRACER_USER = properties.getProperty('TRACER_USER', "\"debug@ionata.com.au\"")
+    TRACER_PASS = properties.getProperty('TRACER_PASS', "\"\"")
+}
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+    defaultConfig {
+        applicationId "au.com.ionata.tracer"
+        minSdkVersion 17
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
+    }
+    buildTypes {
+        debug {
+            buildConfigField "String", "TRACER_USER", TRACER_USER
+            buildConfigField "String", "TRACER_PASS", TRACER_PASS
+        }
+        release {
+            minifyEnabled false
+            buildConfigField "String", "TRACER_USER", TRACER_USER
+            buildConfigField "String", "TRACER_PASS", TRACER_PASS
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:1.1.2-5"
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:1.1.2-5"
+    compile("org.jetbrains.anko:anko:0.10.0") {
+        exclude group: "com.google.android", module: "android"
+    }
+    compile "com.evernote:android-job:1.1.10"
+    compile 'com.google.android.gms:play-services-base:11.0.1'
+    compile 'com.google.android.gms:play-services-gcm:11.0.1'
+    compile 'com.google.android.gms:play-services-location:11.0.1'
+    compile 'com.google.code.gson:gson:2.8.0'
+    compile 'com.squareup.okhttp:okhttp:2.6.0'
+    compile 'com.intentfilter:android-permissions:0.1.2'
+}
+kotlin {
+    experimental {
+        coroutines "enable"
+    }
+}
