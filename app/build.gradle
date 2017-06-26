@@ -6,6 +6,8 @@ ext {
     Properties properties = new Properties()
     properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
+    ARTIFACTORY_USER = properties.getProperty('ARTIFACTORY_USER', "\"\"")
+    ARTIFACTORY_PASS = properties.getProperty('ARTIFACTORY_PASS', "\"\"")
     TRACER_USER = properties.getProperty('TRACER_USER', "\"debug@ionata.com.au\"")
     TRACER_PASS = properties.getProperty('TRACER_PASS', "\"\"")
 }
@@ -39,8 +41,18 @@ android {
     }
 }
 
+repositories {
+    maven {
+        url "https://packages.dev.ionata.com/artifactory/libs-release-local"
+        credentials {
+            username = "${ARTIFACTORY_USER}"
+            password = "${ARTIFACTORY_PASS}"
+        }
+    }
+}
+
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
+    compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -52,13 +64,13 @@ dependencies {
     compile("org.jetbrains.anko:anko:0.10.0") {
         exclude group: "com.google.android", module: "android"
     }
-    compile "com.evernote:android-job:1.1.10"
+    compile("au.com.ionata:tracerlib:0.1.0@aar") {
+        transitive=true
+        exclude group: "com.google.android", module: "android"
+    }
     compile 'com.google.android.gms:play-services-base:11.0.1'
     compile 'com.google.android.gms:play-services-gcm:11.0.1'
     compile 'com.google.android.gms:play-services-location:11.0.1'
-    compile 'com.google.code.gson:gson:2.8.0'
-    compile 'com.squareup.okhttp:okhttp:2.6.0'
-    compile 'com.intentfilter:android-permissions:0.1.2'
 }
 kotlin {
     experimental {

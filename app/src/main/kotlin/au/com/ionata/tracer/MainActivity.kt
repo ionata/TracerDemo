@@ -37,7 +37,6 @@ inline fun ViewManager.heading(text: CharSequence?): TextView = heading(text) {}
 
 
 class MainActivity: NeedsGMSActivity(), AnkoLogger {
-  // val username = "chris+tracertest@ionata.com.au"
   val username = TRACER_USER
   val password = TRACER_PASS
   val test_api = true
@@ -105,6 +104,7 @@ class MainActivity: NeedsGMSActivity(), AnkoLogger {
   fun unregister() {
     TT.reset()
     updateUI()
+    TT.stopTracking()
   }
 }
 
